@@ -57,8 +57,20 @@ export function Dashboard() {
       }
     });
     
+    // Auto-refresh for charts (check localStorage setting)
+    const autoRefreshEnabled = localStorage.getItem('autoRefreshDashboard') !== 'false';
+    const refreshInterval = parseInt(localStorage.getItem('refreshInterval') || '30', 10) * 1000;
+    let interval: number | undefined;
+    
+    if (autoRefreshEnabled && refreshInterval > 0) {
+      interval = setInterval(() => {
+        fetchDashboardData();
+      }, refreshInterval);
+    }
+    
     return () => {
       unsubscribe();
+      if (interval) clearInterval(interval);
     };
   }, []);
 

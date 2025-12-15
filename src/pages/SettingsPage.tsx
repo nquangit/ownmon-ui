@@ -234,13 +234,40 @@ export function SettingsPage() {
             <div>
               <p className="text-brand-text font-medium">Auto-refresh Dashboard</p>
               <p className="text-sm text-brand-text-muted">
-                Automatically refresh data every 30 seconds
+                Automatically refresh charts periodically
               </p>
             </div>
-            <div className="relative inline-block w-12 h-6">
-              <input type="checkbox" defaultChecked className="sr-only peer" />
-              <div className="w-12 h-6 bg-brand-border peer-checked:bg-blue-500 rounded-full peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all cursor-pointer"></div>
+            <label className="relative inline-block w-12 h-6 cursor-pointer">
+              <input
+                type="checkbox"
+                defaultChecked={localStorage.getItem('autoRefreshDashboard') !== 'false'}
+                onChange={(e) => {
+                  localStorage.setItem('autoRefreshDashboard', String(e.target.checked));
+                }}
+                className="sr-only peer"
+              />
+              <div className="w-12 h-6 bg-brand-border peer-checked:bg-blue-500 rounded-full peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-brand-text font-medium">Refresh Interval</p>
+              <p className="text-sm text-brand-text-muted">
+                Time between data refreshes (seconds)
+              </p>
             </div>
+            <input
+              type="number"
+              min="5"
+              max="300"
+              defaultValue={localStorage.getItem('refreshInterval') || '30'}
+              onChange={(e) => {
+                const value = Math.max(5, Math.min(300, parseInt(e.target.value) || 30));
+                localStorage.setItem('refreshInterval', String(value));
+              }}
+              className="w-20 px-3 py-2 bg-brand-surface border border-brand-border rounded-lg text-brand-text text-center focus:outline-none focus:border-blue-500"
+            />
           </div>
 
           <div className="flex items-center justify-between">
@@ -250,10 +277,17 @@ export function SettingsPage() {
                 Display categories with no activity
               </p>
             </div>
-            <div className="relative inline-block w-12 h-6">
-              <input type="checkbox" className="sr-only peer" />
-              <div className="w-12 h-6 bg-brand-border peer-checked:bg-blue-500 rounded-full peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all cursor-pointer"></div>
-            </div>
+            <label className="relative inline-block w-12 h-6 cursor-pointer">
+              <input
+                type="checkbox"
+                defaultChecked={localStorage.getItem('showEmptyCategories') === 'true'}
+                onChange={(e) => {
+                  localStorage.setItem('showEmptyCategories', String(e.target.checked));
+                }}
+                className="sr-only peer"
+              />
+              <div className="w-12 h-6 bg-brand-border peer-checked:bg-blue-500 rounded-full peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+            </label>
           </div>
         </div>
       </div>
